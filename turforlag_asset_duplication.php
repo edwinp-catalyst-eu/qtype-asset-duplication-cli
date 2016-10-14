@@ -87,8 +87,16 @@ if ($options['sourcecourseid']) {
     $course = $DB->get_record('course', array('id' => $options['sourcecourseid']), '*', MUST_EXIST);
 }
 
-$sourcequestionids = question_ids($options['sourcecourseid'], 'turmultiplechoice');
-$destinationquestionids = question_ids($options['destinationcourseid'], 'turmultiplechoice');
+// Turmultiplechoice question types.
+$turmultiplechoicesourcequestionids = question_ids($options['sourcecourseid'], 'turmultiplechoice');
+$turmultiplechoicedestinationquestionids = question_ids($options['destinationcourseid'], 'turmultiplechoice');
+
+// Turprove question types.
+$turprovesourcequestionids = question_ids($options['sourcecourseid'], 'turprove');
+$turprovedestinationquestionids = question_ids($options['destinationcourseid'], 'turprove');
+
+$sourcequestionids = array_merge($turmultiplechoicesourcequestionids, $turprovesourcequestionids);
+$destinationquestionids = array_merge($turmultiplechoicedestinationquestionids, $turprovedestinationquestionids);
 
 if (count($sourcequestionids) != count($destinationquestionids)) {
     mtrace("Differing number of turmultiplechoice questions in the two specified courses. Not happy with this. Aborting.");
